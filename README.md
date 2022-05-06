@@ -1,23 +1,36 @@
-# Next.js + Tailwind CSS Example
+This is a [Next.js](https://nextjs.org/) project. NFT Marketplace in React, Typescript & Solidity 
+## Overview
 
-This example shows how to use [Tailwind CSS](https://tailwindcss.com/) [(v3.0)](https://tailwindcss.com/blog/tailwindcss-v3) with Next.js. It follows the steps outlined in the official [Tailwind docs](https://tailwindcss.com/docs/guides/nextjs).
+Marketplace has dependencies on multiple technologies.
 
-## Deploy your own
+* [Pinata](https://app.pinata.cloud/) - store images, and NFT metadata
+* [Ganache](https://trufflesuite.com/ganache/) - private Blockchain, to run application localy
 
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example) or preview live with [StackBlitz](https://stackblitz.com/github/vercel/next.js/tree/canary/examples/with-tailwindcss)
+## To run the app
+1. run `npm install` to install dependencies
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-tailwindcss&project-name=with-tailwindcss&repository-name=with-tailwindcss)
+2. In the root folder of the application create a `.env.development` file with following content:
 
-## How to use
-
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init) or [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) to bootstrap the example:
-
-```bash
-npx create-next-app --example with-tailwindcss with-tailwindcss-app
-# or
-yarn create next-app --example with-tailwindcss with-tailwindcss-app
-# or
-pnpm create next-app -- --example with-tailwindcss with-tailwindcss-app
 ```
+NEXT_PUBLIC_NETWORK_ID=5777
+NEXT_PUBLIC_TARGET_CHAIN_ID=1337
+NEXT_PUBLIC_PINATA_DOMAIN=https://gateway.pinata.cloud
 
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+SECRET_COOKIE_PASSWORD={your custom at least 32 characters long password!}
+
+PINATA_API_KEY={your api key from pinata}
+PINATA_SECRET_API_KEY={your api secret key from pinata}
+```
+* (your api pinata key has to allow `pinFileToIPFS` and `pinJSONToIPFS` rules)
+
+3. Then migrate a contract to Ganache, contract can be found in the `contracts` folder. It's called `NftMarket.sol`
+
+* To migrate the contract run `truffle migrate` in the terminal while Ganache network is setup and running.
+
+* Do not forget to link `trufle-config.js` with Ganache, just go to `config` and click `Add Project`
+
+* `keys.json` must be created if you want to deploy to Ropsten, if not, just remove import of `keys.json` from `trufle-config.js` and also comment out `ropsten` configuration
+
+4. Now everything is setup and you can test out the app.
+
+* Run `npm run dev` in the terminal. App will run at `localhost:3000`
