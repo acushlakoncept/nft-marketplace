@@ -1,3 +1,4 @@
+import { setupHooks, Web3Hooks } from "@hooks/web3/setupHooks";
 import { MetaMaskInpageProvider } from "@metamask/providers";
 import { Contract, ethers, providers } from "ethers";
 
@@ -14,7 +15,8 @@ export type Web3Params = {
 }
 
 export type Web3State = {
-  isLoading: boolean,
+  isLoading: boolean;
+  hooks: Web3Hooks;
 } & Web3Params;
 
 export const createDefaultState = () => {
@@ -23,6 +25,7 @@ export const createDefaultState = () => {
     provider: null,
     contract: null,
     isLoading: true,
+    hooks: setupHooks({} as any)
   }
 }
 
