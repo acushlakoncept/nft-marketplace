@@ -12,14 +12,7 @@ const Home: NextPage = () => {
   console.log(provider)
   console.log(contract)
 
-  const getAccounts = async () => {
-    const accounts = await provider!.listAccounts()
-    console.log(accounts[0])
-  }
-
-  if (provider) {
-    getAccounts();
-  }
+  
 
   return (
     <BaseLayout>
