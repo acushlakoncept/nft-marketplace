@@ -19,7 +19,8 @@ export default function Navbar() {
 
   const {account} = useAccount();
 
-  console.log(account.data);
+  console.log("is Loading ", account.isLoading);
+  console.log("is Installed ", account.isInstalled);
 
   return (
     <Disclosure as="nav" className="bg-gray-800">
