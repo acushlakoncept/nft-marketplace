@@ -1,11 +1,15 @@
 import { CryptoHookFactory } from "@_types/hooks";
 import useSWR from "swr";
 
-type AccountHookFactory = CryptoHookFactory<string, string>
+type UseAccountResponse = {
+  connect: () => void;
+}
+
+type AccountHookFactory = CryptoHookFactory<string, UseAccountResponse>
 
 export type UseAccountHook = ReturnType<AccountHookFactory>
 
-export const hookFactory: AccountHookFactory = ({provider}) => () => {
+export const hookFactory: AccountHookFactory = ({provider, ethereum}) => () => {
   const swrRes = useSWR(provider ? "web3/useAccount" : null,  
   async () => {
     const accounts = await provider!.listAccounts();
@@ -20,7 +24,18 @@ export const hookFactory: AccountHookFactory = ({provider}) => () => {
     revalidateOnFocus: false
   })
 
-  return swrRes;
+  const connect = async () => {
+    try {
+      ethereum?.request({method: "eth_requestAccounts"});
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  return {
+    ...swrRes,
+    connect
+  };
 }
 
 // export const useAccount = hookFactory({ethereum: undefined, provider: undefined});
