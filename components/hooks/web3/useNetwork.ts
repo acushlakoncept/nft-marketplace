@@ -37,7 +37,8 @@ export const hookFactory: NetworkHookFactory = ({provider, isLoading}) => () => 
       
     return NETWORKS[chainId];
   }, {
-    revalidateOnFocus: false
+    revalidateOnFocus: false,
+    shouldRetryOnError: false,
   })
 
 
