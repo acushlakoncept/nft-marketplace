@@ -24,7 +24,19 @@ contract("NftMarket", accounts => {
 
     it("first token should point to tokenURI", async () => {
       const actualTokenURI = await _contract.tokenURI(1);
-      assert.equal(actualTokenURI, tokenURI, "TokenURI is not matching");
+      assert(actualTokenURI == tokenURI, "TokenURI is not matching");
+    })
+
+    it("should not be possible to create NFT with already used tokenURI", async () => {
+
+      try {
+        await _contract.mintToken(tokenURI, {
+          from: accounts[0]
+        })
+      } catch (error) {
+        assert(error, "Token URI already exists");
+      }
+
     })
   })
 })
