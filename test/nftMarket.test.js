@@ -46,5 +46,14 @@ contract("NftMarket", accounts => {
       assert(listedItemsCount == 1, "Listed item count is not 1");
     })
 
+    it("should have created Nft item", async () => {
+      const nftItem = await _contract.getNftItem(1);
+      console.log(nftItem)
+      assert(nftItem.tokenId == 1, "Token id is not 1");
+      assert(nftItem.price == _nftPrice, `Token price is not ${_nftPrice}`);
+      assert(nftItem.creator == accounts[0], `Nft creator does not match ${accounts[0]}`);
+      assert(nftItem.isListed == true, "Token is not listed");
+    })
+
   })
 })
