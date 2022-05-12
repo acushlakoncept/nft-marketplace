@@ -50,7 +50,6 @@ contract("NftMarket", accounts => {
 
     it("should have created Nft item", async () => {
       const nftItem = await _contract.getNftItem(1);
-      console.log(nftItem)
       assert(nftItem.tokenId == 1, "Token id is not 1");
       assert(nftItem.price == _nftPrice, `Token price is not ${_nftPrice}`);
       assert(nftItem.creator == accounts[0], `Nft creator does not match ${accounts[0]}`);
@@ -81,5 +80,29 @@ contract("NftMarket", accounts => {
       const currentOwner = await _contract.ownerOf(1);
       assert.equal(currentOwner, accounts[1], "Owner not changed!");
     })
+  })
+
+  describe("Token transfers", () => {
+    const tokenURI = "https://test-json.com"
+    before(async () => {
+      await _contract.mintToken(tokenURI, _nftPrice, {
+        from: accounts[0],
+        value: _listingPrice
+      });
+    })
+
+    it("should have two NFTs created", async () => {
+      const totalSupply = await _contract.totalSupply();
+      assert.equal(totalSupply.toNumber(), 2, "Total supply is not 2");
+    })
+
+    it("should be able to retrieve token by index", async () => {
+      const nftId1 = await _contract.tokenByIndex(0);
+      const nftId2 = await _contract.tokenByIndex(1);
+
+      assert.equal(nftId1.toNumber(), 1, "NFT id is not 1");
+      assert.equal(nftId2.toNumber(), 2, "NFT id is not 2");
+    })
+
   })
 })
