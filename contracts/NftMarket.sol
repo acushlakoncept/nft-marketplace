@@ -58,6 +58,11 @@ contract NftMarket is ERC721URIStorage {
     return _allNfts[index];
   }
 
+  function tokenOfOwnerByIndex(address owner, uint index) public view returns (uint) {
+    require(index < ERC721.balanceOf(owner), "Index out of bounds");
+    return _ownedTokens[owner][index];
+  }
+
   function getAllNftsOnSale() public view returns (NftItem[] memory) {
     uint allItemsCount = totalSupply();
     uint currentIndex = 0;
@@ -74,6 +79,21 @@ contract NftMarket is ERC721URIStorage {
 
     return items;
   }
+
+  function getOwnedNfts() public view returns (NftItem[] memory) {
+    uint ownedItemsCount = ERC721.balanceOf(msg.sender);
+    NftItem[] memory items = new NftItem[](ownedItemsCount);
+
+    for( uint i = 0; i < ownedItemsCount; i++) {
+      uint tokenId = tokenOfOwnerByIndex(msg.sender, i);
+      NftItem storage item = _idToNftItem[tokenId];
+      items[i] = item;
+    }
+
+    return items;
+  }
+
+
 
   function mintToken(string memory tokenURI, uint price) public payable returns (uint) {
     require(!tokenURIExists(tokenURI), "Token URI already exists");
