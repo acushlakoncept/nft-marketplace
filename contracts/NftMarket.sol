@@ -150,11 +150,13 @@ contract NftMarket is ERC721URIStorage {
 
       if(from == address(0)) {
         _addTokenToAllTokensEnumeration(tokenId);
+      } else if ( from != to) {
+        _removeTokenFromOwnerEnumeration(from, tokenId);
       }
 
       if(to != from) {
         _addTokenToOwnerEnumeration(to, tokenId);
-      }
+      } 
   }
 
   function _addTokenToAllTokensEnumeration(uint tokenId) private {
@@ -167,6 +169,21 @@ contract NftMarket is ERC721URIStorage {
 
     _ownedTokens[to][length] = tokenId;
     _idToOwnedIndex[tokenId] = length;
+  }
+
+  function _removeTokenFromOwnerEnumeration(address from, uint tokenId) private {
+    uint lastTokenIndex = ERC721.balanceOf(from) - 1;
+    uint tokenIndex = _idToOwnedIndex[tokenId];
+
+    if (tokenIndex != lastTokenIndex) {
+      uint lastTokenId = _ownedTokens[from][lastTokenIndex];
+
+      _ownedTokens[from][tokenIndex] = lastTokenId;
+      _idToOwnedIndex[lastTokenId] = tokenIndex;
+    }
+
+    delete _idToOwnedIndex[tokenId];
+    delete _ownedTokens[from][lastTokenIndex];
   }
 
 
