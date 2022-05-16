@@ -6,10 +6,13 @@ import { BaseLayout } from '@ui'
 import { Switch } from '@headlessui/react'
 import Link from 'next/link'
 import { NftMeta } from '@_types/nft';
-import { create } from 'domain';
 import axios from 'axios';
+import { useWeb3 } from '@providers/web3';
+import { useAccount } from '@hooks/web3';
 
 const NftCreate: NextPage = () => {
+  const { ethereum } = useWeb3();
+  const { account } = useAccount();
   const [nftURI, setNftURI] = useState("");
   const [hasURI, setHasURI] = useState(false);
   const [nftMeta, setNftMeta] = useState<NftMeta>({
@@ -43,9 +46,18 @@ const NftCreate: NextPage = () => {
   }
 
   const createNft = async () => {
+    // TODO: ask why ethereum not working? and why not use useAccount()
     try {
       const messageToSign = await axios.get("/api/verify");
-      // console.log("messageToSign 🔥 ", messageToSign.data);
+      // const accounts = await window?.ethereum.request({method: "eth_requestAccounts"}) as string[];
+      // const account = accounts[0];
+
+      const signedData = await window?.ethereum.request({
+        method: "personal_sign",
+        params: [JSON.stringify(messageToSign.data), account.data, messageToSign.data.id]
+      })
+
+      console.log(signedData)
     } catch (e: any) {
       console.log(e.message)
     }
