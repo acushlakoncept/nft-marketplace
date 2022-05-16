@@ -1,3 +1,5 @@
+import exp from "constants";
+
 export type Trait = "attact" | "health" | "speed";
 
 export type NftAttribute = {
@@ -11,3 +13,14 @@ export type NftMeta = {
   image: string;
   attributes: NftAttribute[];
 }
+
+export type NftCore = {
+  tokenId: number;
+  price: number;
+  creator: string;
+  isListed: boolean;
+}
+
+export type Nft = {
+  meta: NftMeta;
+} & NftCore;
