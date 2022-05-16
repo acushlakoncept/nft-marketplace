@@ -93,6 +93,10 @@ contract NftMarket is ERC721URIStorage {
     return items;
   }
 
+  function burnToken(uint tokenId) public {
+    _burn(tokenId);
+  }
+
 
 
   function mintToken(string memory tokenURI, uint price) public payable returns (uint) {
@@ -159,10 +163,6 @@ contract NftMarket is ERC721URIStorage {
       } else if( to != from) {
         _addTokenToOwnerEnumeration(to, tokenId);
       }
-
-      if(to != from) {
-        _addTokenToOwnerEnumeration(to, tokenId);
-      } 
   }
 
   function _addTokenToAllTokensEnumeration(uint tokenId) private {
