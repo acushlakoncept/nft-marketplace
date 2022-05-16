@@ -1,6 +1,6 @@
 import exp from "constants";
 
-export type Trait = "attact" | "health" | "speed";
+export type Trait = "attack" | "health" | "speed";
 
 export type NftAttribute = {
   trait_type: Trait;
