@@ -7,6 +7,7 @@ import { Switch } from '@headlessui/react'
 import Link from 'next/link'
 import { NftMeta } from '@_types/nft';
 import { create } from 'domain';
+import axios from 'axios';
 
 const NftCreate: NextPage = () => {
   const [nftURI, setNftURI] = useState("");
@@ -41,8 +42,13 @@ const NftCreate: NextPage = () => {
     })
   }
 
-  const createNft = () => {
-    console.log(nftMeta);
+  const createNft = async () => {
+    try {
+      const messageToSign = await axios.get("/api/verify");
+      // console.log("messageToSign 🔥 ", messageToSign.data);
+    } catch (e: any) {
+      console.log(e.message)
+    }
   }
 
   return (
