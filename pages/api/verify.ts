@@ -3,7 +3,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Session } from 'next-iron-session';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { withSession, contractAddress } from './utils';
+import { withSession, contractAddress, addressCheckMiddleware } from './utils';
 import { NftMeta } from '@_types/nft';
 
 export default withSession(async (req: NextApiRequest & {session: Session}, res: NextApiResponse) => {
@@ -16,8 +16,11 @@ export default withSession(async (req: NextApiRequest & {session: Session}, res:
       if(!nft.name || !nft.description || !nft.attributes) {
         return res.status(422).send("Some of the form data are missing")
       }
+
+      // addressCheckMiddleware(req, res);
+      await addressCheckMiddleware(req, res);
       
-      res.status(200).send({message: "Nft has successfully been created"})
+      return res.status(200).send({message: "Nft has successfully been created"})
     } catch (error) {
       return res.status(422).send({message: "Cannot create JSON"})
     }
