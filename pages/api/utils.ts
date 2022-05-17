@@ -47,9 +47,7 @@ export const addressCheckMiddleware = async (req: NextApiRequest & {session: Ses
     const addrBuffer = util.pubToAddress(pubKey);
     const address = util.bufferToHex(addrBuffer);
 
-    console.log(address);
-
-    if(address === req.body.address) {
+    if(address === req.body.address.toLowerCase()) {
       resolve("Correct Address");
     } else {
       reject("Incorrect Address");
