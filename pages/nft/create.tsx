@@ -26,6 +26,36 @@ const NftCreate: NextPage = () => {
     ]
   })
 
+  const getSignedData = async () => {
+    const messageToSign = await axios.get("/api/verify");
+    // const accounts = await window?.ethereum.request({method: "eth_requestAccounts"}) as string[];
+    // const account = accounts[0];
+
+    const signedData = await window?.ethereum.request({
+      method: "personal_sign",
+      params: [JSON.stringify(messageToSign.data), account.data, messageToSign.data.id]
+    })
+
+    return { signedData };
+  }
+
+  const handleImage = async (e: ChangeEvent<HTMLInputElement>) => {
+    if(!e.target.files) {
+      console.error("Select a file");
+      return;
+    }
+
+    const file = e.target.files[0];
+    const buffer = await file.arrayBuffer();
+    const bytes = new Uint8Array(buffer);
+    
+    try {
+      const { signedData } = await getSignedData();
+    } catch (e: any) {
+      console.error(e.message)
+    }
+  }
+
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setNftMeta({
@@ -48,14 +78,7 @@ const NftCreate: NextPage = () => {
   const createNft = async () => {
     // TODO: ask why ethereum not working? and why not use useAccount()
     try {
-      const messageToSign = await axios.get("/api/verify");
-      // const accounts = await window?.ethereum.request({method: "eth_requestAccounts"}) as string[];
-      // const account = accounts[0];
-
-      const signedData = await window?.ethereum.request({
-        method: "personal_sign",
-        params: [JSON.stringify(messageToSign.data), account.data, messageToSign.data.id]
-      })
+      const { signedData } = await getSignedData();
 
       await axios.post("/api/verify", {
         address: account.data,
@@ -241,6 +264,7 @@ const NftCreate: NextPage = () => {
                           >
                             <span>Upload a file</span>
                             <input
+                              onChange={handleImage}
                               id="file-upload"
                               name="file-upload"
                               type="file"
