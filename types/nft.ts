@@ -24,3 +24,9 @@ export type NftCore = {
 export type Nft = {
   meta: NftMeta;
 } & NftCore;
+
+export type FileRequest = {
+  bytes: Uint8Array;
+  contentType: string;
+  fileName: string;
+}

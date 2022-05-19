@@ -40,7 +40,7 @@ const NftCreate: NextPage = () => {
   }
 
   const handleImage = async (e: ChangeEvent<HTMLInputElement>) => {
-    if(!e.target.files) {
+    if(!e.target.files || e.target.files.length === 0) {
       console.error("Select a file");
       return;
     }
@@ -48,9 +48,18 @@ const NftCreate: NextPage = () => {
     const file = e.target.files[0];
     const buffer = await file.arrayBuffer();
     const bytes = new Uint8Array(buffer);
-    
+
     try {
       const { signedData } = await getSignedData();
+
+      await axios.post("/api/verify-image", {
+        address: account.data,
+        signature: signedData,
+        bytes,
+        contentType: file.type,
+        fileName: file.name.replace(/\.[^/.]+$/, "")
+      })
+
     } catch (e: any) {
       console.error(e.message)
     }
