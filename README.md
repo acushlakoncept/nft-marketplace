@@ -20,6 +20,8 @@ SECRET_COOKIE_PASSWORD={your custom at least 32 characters long password!}
 
 PINATA_API_KEY={your api key from pinata}
 PINATA_SECRET_API_KEY={your api secret key from pinata}
+
+INFURA_ROPSTEN_URL=https://ropsten.infura.io/v3/xxxxx
 ```
 * (your api pinata key has to allow `pinFileToIPFS` and `pinJSONToIPFS` rules)
 
@@ -34,3 +36,19 @@ PINATA_SECRET_API_KEY={your api secret key from pinata}
 4. Now everything is setup and you can test out the app.
 
 * Run `npm run dev` in the terminal. App will run at `localhost:3000`
+
+### Deployment
+1. Infura.io
+2. Create new project
+3. Select endpoint -> Ropsten in my case or Rinkeby, you can get free Ropsten ETH => https://moonborrow.com/
+4. Copy the API key endpoint url with https://. and add it to your .env file
+5. Create `keys.json` in the root directory, add to `gitignore`. Add your metamask private key in this format
+```
+{
+  "PRIVATE_KEY": "xxxxxxxx",
+  "INFURA_ROPSTEN_URL": "https://ropsten.infura.io/v3/xxxxxxx"
+}
+```
+6. Deploy contract to ropsten: `truffle migrate --network ropsten`
+
+> contract address: 0xbC38c937dAd7f548251EB5Ee2b9a3b6CfEd964BF
