@@ -12,6 +12,7 @@ import { useAccount, useNetwork } from '@hooks/web3';
 import { ethers } from 'ethers';
 import { toast } from 'react-toastify';
 import { ExclamationIcon } from '@heroicons/react/solid';
+import { useRouter } from 'next/router';
 
 const ALLOWED_FIELDS = ['name', 'description', 'image', 'attributes']
 
@@ -19,6 +20,7 @@ const NftCreate: NextPage = () => {
   const { ethereum, contract } = useWeb3();
   const { account } = useAccount();
   const { network } = useNetwork();
+  const router = useRouter();
   const [nftURI, setNftURI] = useState("");
   const [price, setPrice] = useState("");
   const [hasURI, setHasURI] = useState(false);
@@ -141,8 +143,6 @@ const NftCreate: NextPage = () => {
         }
       })
 
-      console.log(contract)
-
       const txn = await contract?.mintToken(
         nftURI, 
         ethers.utils.parseEther(price), {
@@ -157,6 +157,8 @@ const NftCreate: NextPage = () => {
           error: "Error creating NFT"
         }
       )
+
+      router.push('/')
 
     } catch(e: any) {
       console.error(e.message);
