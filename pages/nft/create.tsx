@@ -10,13 +10,12 @@ import axios from 'axios';
 import { useWeb3 } from '@providers/web3';
 import { useAccount } from '@hooks/web3';
 import { ethers } from 'ethers';
+import { toast } from 'react-toastify';
 
 const ALLOWED_FIELDS = ['name', 'description', 'image', 'attributes']
 
 const NftCreate: NextPage = () => {
   const { ethereum, contract } = useWeb3();
-  const hey = useWeb3();
-  console.log(hey);
   const { account } = useAccount();
   const [nftURI, setNftURI] = useState("");
   const [price, setPrice] = useState("");
@@ -34,10 +33,8 @@ const NftCreate: NextPage = () => {
 
   const getSignedData = async () => {
     const messageToSign = await axios.get("/api/verify");
-    // const accounts = await window?.ethereum.request({method: "eth_requestAccounts"}) as string[];
-    // const account = accounts[0];
 
-    const signedData = await window?.ethereum.request({
+    const signedData = await ethereum?.request({
       method: "personal_sign",
       params: [JSON.stringify(messageToSign.data), account.data, messageToSign.data.id]
     })
@@ -58,13 +55,22 @@ const NftCreate: NextPage = () => {
     try {
       const { signedData } = await getSignedData();
 
-      const res = await axios.post("/api/verify-image", {
+      const promise = axios.post("/api/verify-image", {
         address: account.data,
         signature: signedData,
         bytes,
         contentType: file.type,
         fileName: file.name.replace(/\.[^/.]+$/, "")
       })
+
+      const res = await toast.promise(
+        promise, {
+          pending: "Uploading image...",
+          success: "Image uploaded successfully",
+          error: "Error uploading image"
+        }
+      )
+
 
       const data = res.data as PinataRes;
 
@@ -101,11 +107,19 @@ const NftCreate: NextPage = () => {
     try {
       const { signedData } = await getSignedData();
 
-      const res = await axios.post("/api/verify", {
+      const promise = axios.post("/api/verify", {
         address: account.data,
         signature: signedData,
         nft: nftMeta
       })
+
+      const res = await toast.promise(
+        promise, {
+          pending: "Uploading metadata...",
+          success: "Metadata uploaded successfully",
+          error: "Error uploading metadata"
+        }
+      )
 
       const data = res.data as PinataRes;
       setNftURI(`${process.env.NEXT_PUBLIC_PINATA_DOMAIN}/ipfs/${data.IpfsHash}`);
@@ -134,8 +148,13 @@ const NftCreate: NextPage = () => {
         }
       );
 
-      await txn?.wait();
-      alert("Nft created");
+      await toast.promise(
+        txn!.wait(), {
+          pending: "Creating NFT....",
+          success: "NFT created successfully",
+          error: "Error creating NFT"
+        }
+      )
 
     } catch(e: any) {
       console.error(e.message);
