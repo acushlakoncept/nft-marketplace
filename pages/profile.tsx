@@ -4,8 +4,9 @@ import type { NextPage } from 'next'
 import { BaseLayout } from '@ui'
 
 import { Nft } from '@_types/nft';
-import { useOwnedNfts } from '@hooks/web3';
+import { useNetwork, useOwnedNfts } from '@hooks/web3';
 import { useEffect, useState } from 'react';
+import { ExclamationIcon } from '@heroicons/react/solid';
 
 const tabs = [
   { name: 'Your Collection', href: '#', current: true },
@@ -18,6 +19,7 @@ function classNames(...classes: string[]) {
 const Profile: NextPage = () => {
   const { nfts } = useOwnedNfts();
   const [activeNft, setActiveNft] = useState<Nft>();
+  const { network } = useNetwork();
 
   useEffect(() => {
     if(nfts.data && nfts.data.length > 0) {
@@ -26,6 +28,32 @@ const Profile: NextPage = () => {
 
     return () => setActiveNft(undefined)
   }, [nfts.data])
+
+
+  if (!network.isConnectedToNetwork) {
+    return (     
+        <BaseLayout>
+            <div className="rounded-md bg-yellow-50 p-4 mt-10">
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <ExclamationIcon className="h-5 w-5 text-yellow-400" aria-hidden="true" />
+                </div>
+                <div className="ml-3">
+                  <h3 className="text-sm font-medium text-yellow-800">Attention needed</h3>
+                  <div className="mt-2 text-sm text-yellow-700">
+                    <p>
+                    { network.isLoading ?
+                      "Loading..." :
+                      `Connect to ${network.targetNetwork}`
+                    }
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+    </BaseLayout>
+    );
+  }
 
   return (
     <BaseLayout>
