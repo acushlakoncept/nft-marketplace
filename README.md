@@ -1,10 +1,17 @@
-This is a [Next.js](https://nextjs.org/) project. NFT Marketplace in React, Typescript & Solidity 
+# NFT marketplace
+
+In this project,  I created an interactive NFT marketplace in React, Typescript & Solidity. Clients on this platform will be able to purchase NFTs with Ether digital currency.
+The application is created in the Next JS framework, built on top of the React JS.
 ## Overview
 
 Marketplace has dependencies on multiple technologies.
 
 * [Pinata](https://app.pinata.cloud/) - store images, and NFT metadata
 * [Ganache](https://trufflesuite.com/ganache/) - private Blockchain, to run application localy
+
+[Live](https://nftmarket-jade.vercel.app/)
+
+![screenshot](./screenshot.jpg)
 
 ## To run the app
 1. run `npm install` to install dependencies
